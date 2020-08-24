@@ -1,1 +1,110 @@
-<h1>OpenTerm</h1>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+
+    * {
+        font-family: Quicksand;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+        display: block
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    tr:nth-child(even) {
+        background: #333
+    }
+
+    header>* {
+        display: inline-block;
+        vertical-align: middle;
+        ;
+    }
+
+    #nav {
+        background: #333;
+        width: 200px
+    }
+
+    #data {
+        background: #222;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    #layout {
+        width: 100%;
+        height: 100%;
+    }
+
+    * {
+        color: white
+    }
+
+    td {
+        vertical-align: top;
+        padding: .5rem;
+    }
+    td:active{
+        border: 1px solid red;
+    }
+    table{outline: none;}
+</style>
+
+
+<table id='layout'>
+    <tr>
+        <td id='nav'>
+            <header>
+                <img src='logo.svg' style='width:80px;' />
+                <h1>
+                    <div style='color: hsla(254, 50%, 50%, 90%);'>Open</div>
+                    <div style='color: hsla(254, 50%, 70%, 90%);'>Term</div>
+                </h1>
+            </header>
+
+            <h3>MicroBiology</h3>
+            <a href='#MicroBiology/requests'>Requests</a>
+            <a href='#MicroBiology/bacteria'>Bacteria</a>
+            <a href='#MicroBiology/fungi'>Fungi</a>
+
+            <h3>Anatomy</h3>
+            <a href='#MicroBiology/requests'>Requests</a>
+            <a href='#MicroBiology/bacteria'>Bacteria</a>
+            <a href='#MicroBiology/fungi'>Fungi</a>
+
+        </td>
+        <td>
+            <div id='data'></div>
+        </td>
+    </tr>
+</table>
+
+
+<script>
+    td = x => `<td>${x}</td>`;
+    tr = x => `<tr>${x.map(td).join('\n')}</tr>`;
+    table = x => `<table contenteditable='true'>${x.map(tr).join('\n')}</table>`;
+    raw = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/${folder}/master/${file}.tsv`
+    async function load() {
+        let request = document.location.hash.substr(1).split('/');
+        let result = await fetch(raw(request[0], request[1])).then(x => x.text());
+        let data = result.split('\n').map(x => x.split('\t'));
+        let html = [];
+        // for(let row of data){
+        //     for(let col of row){
+
+        //     }
+        // }
+        console.log(data)
+        console.log(table(data))
+        document.querySelector('#data').innerHTML = table(data);
+    }
+    window.addEventListener('hashchange', load)
+</script>
