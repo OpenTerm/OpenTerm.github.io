@@ -1,8 +1,16 @@
+<meta charset="UTF-8">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap');
 
     * {
         font-family: Quicksand;
+        color: white
+    }
+
+    h3 {
+        color: #ddf;
+        margin-bottom: 0;
     }
 
     a {
@@ -34,6 +42,12 @@
         background: #222;
     }
 
+    #data>div {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
     body {
         margin: 0;
     }
@@ -43,25 +57,51 @@
         height: 100%;
     }
 
-    * {
-        color: white
-    }
+
 
     td {
         vertical-align: top;
         padding: .5rem;
     }
-    td:active{
-        border: 1px solid red;
+
+    tr:first-child td {
+        color: #ddf;
     }
-    table{outline: none;}
+
+    td:first-child {
+        font-family: Inconsolata;
+        font-weight: bold;
+        color: #ddf;
+    }
+
+    td:not(:first-child) {
+        border-left: 1px solid #444;
+    }
+
+
+
+    table {
+        outline: none;
+    }
+
+    input {
+        background: #444;
+        color: #ddf;
+        border: none;
+        outline: none;
+        font-size: 1.2rem;
+    }
+
+    header {
+        cursor: pointer;
+    }
 </style>
 
 
 <table id='layout'>
     <tr>
         <td id='nav'>
-            <header>
+            <header onclick='document.location.hash=""'>
                 <img src='logo.svg' style='width:80px;' />
                 <h1>
                     <div style='color: hsla(254, 50%, 50%, 90%);'>Open</div>
@@ -69,42 +109,53 @@
                 </h1>
             </header>
 
+            <input type='text' id='search' placeholder='search...' />
+
             <h3>MicroBiology</h3>
             <a href='#MicroBiology/requests'>Requests</a>
             <a href='#MicroBiology/bacteria'>Bacteria</a>
             <a href='#MicroBiology/fungi'>Fungi</a>
 
-            <h3>Anatomy</h3>
-            <a href='#MicroBiology/requests'>Requests</a>
-            <a href='#MicroBiology/bacteria'>Bacteria</a>
-            <a href='#MicroBiology/fungi'>Fungi</a>
+            <h3>Clinical Chemistry</h3>
+            <a href='#ClinicalChemistry/requests'>Requests</a>
+            <a href='#ClinicalChemistry/sources'>Sources</a>
+            <a href='#ClinicalChemistry/test'>Tests</a>
 
+            <h3>Anatomy</h3>
+            <a href='#Anatomy/bones'>Bones</a>
+            <a href='#Anatomy/directions'>directions</a>
+            <a href='#Anatomy/organs'>organs</a>
+
+            <hr/>
+            <a href='https://github.com/OpenTerm' target='blank'>GitHub</a>
         </td>
-        <td>
-            <div id='data'></div>
+        <td id='data'>
+            <div></div>
         </td>
     </tr>
 </table>
 
 
-<script>
-    td = x => `<td>${x}</td>`;
-    tr = x => `<tr>${x.map(td).join('\n')}</tr>`;
-    table = x => `<table contenteditable='true'>${x.map(tr).join('\n')}</table>`;
-    raw = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/${folder}/master/${file}.tsv`
+<script type='module'>
+    import { TSV } from './sv.js';
+    // td = x => `<td>${x}</td>`;
+    // tr = x => `<tr>${x.map(td).join('\n')}</tr>`;
+    // table = x => `<table >${x.map(tr).join('\n')}</table>`;
+    const raw = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/${folder}/master/${file}.tsv`
     async function load() {
         let request = document.location.hash.substr(1).split('/');
-        let result = await fetch(raw(request[0], request[1])).then(x => x.text());
-        let data = result.split('\n').map(x => x.split('\t'));
-        let html = [];
-        // for(let row of data){
-        //     for(let col of row){
+        if (request.length > 1) {
+            let result = await fetch(raw(request[0], request[1])).then(x => x.text());
+            console.log('result', result);
+            let data = TSV(result);
+            data.filterColumns(['OpenTerm20', 'en', 'de'])
+            console.log(data)
+            document.querySelector('#data>div').innerHTML = data.html({ headRow: true });
+        } else {
+            document.querySelector('#data>div').innerHTML = "<h1>Hello</h1>"
+        }
 
-        //     }
-        // }
-        console.log(data)
-        console.log(table(data))
-        document.querySelector('#data').innerHTML = table(data);
     }
     window.addEventListener('hashchange', load)
+    load()
 </script>
