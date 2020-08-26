@@ -6,7 +6,8 @@ export default class SV {
     parse(string) {
         this.data = string
             .split(this.lineDelimiter)
-            .map(line => line.split(this.columnDelimiter));
+            // .map(row=>row.trim())
+            .map(line => line.split(this.columnDelimiter).map(col=>col.trim()));
         return this;
     }
 
