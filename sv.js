@@ -32,6 +32,11 @@ export default class SV {
         this.data = this.data.map(line => line.filter((col, index) => indices.includes(index)))
         return this;
     }
+    removeEmptyRows(){
+        // console.log(this.data.map(row=>row.join('').trim()))
+        this.data = this.data.filter(row=>row.join('').trim())
+        return this;
+    }
 
 
 

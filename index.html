@@ -149,6 +149,7 @@
             console.log('result', result);
             let data = TSV(result);
             data.filterColumns(['OpenTerm20', 'en', 'de'])
+            data.removeEmptyRows();
             console.log(data)
             document.querySelector('#data>div').innerHTML = data.html({ headRow: true });
         } else {
