@@ -18,6 +18,9 @@
         color: white;
         display: block
     }
+    a:hover{
+        color: #ccf;
+    }
 
     table {
         border-collapse: collapse;
@@ -58,7 +61,9 @@
     }
 
 
-
+    tr:hover{
+        background: #555;
+    }
     td {
         vertical-align: top;
         padding: .5rem;
@@ -116,6 +121,7 @@
             <a href='#infectio/vir'>Viruses</a>
             <a href='#infectio/bac'>Bacteria</a>
             <a href='#infectio/fung'>Fungi</a>
+            <a href='#infectio/pasi'>Parasites</a>
             <a href='#infectio/requests'>Requests</a>
             <a href='#infectio/methods'>Methods</a>
 
@@ -130,7 +136,7 @@
             <a href='#anatomy/organs'>organs</a>
 
             <footer>
-                <a href='https://github.com/OpenTerm' target='blank'>GitHub</a>
+                <a href='https://github.com/OpenTerm' target='blank'>edit on GitHub</a>
             </footer>
         </td>
         <td id='data'>
@@ -156,7 +162,7 @@
             console.log('result', result);
             let data = TSV(result);
             console.log(1,data.string)
-            data.filterColumns(['OpenTerm', 'en', 'de'])
+            data.filterColumns(['OpenTerm', 'la','en', 'de'])
             console.log(2,data.string)
             data.removeEmptyRows();
             console.log(3,data.string)
