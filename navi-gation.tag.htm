@@ -1,0 +1,86 @@
+<htm>
+	<lo-go></lo-go>
+
+	<input type='text' id='search' placeholder='search...' on-input='search'/>
+
+	<h3>Infectiology</h3>
+	<div id='infectio'></div>
+
+
+	<h3>Clinical Chemistry</h3>
+	<div id='lab'></div>
+
+
+	<h3>Anatomy</h3>
+	<a href='#anatomy/bones'>Bones</a>
+	<a href='#anatomy/directions'>directions</a>
+	<a href='#anatomy/organs'>organs</a>
+
+	<footer>
+		<a href='https://github.com/OpenTerm' target='blank'>edit on GitHub</a>
+	</footer>
+</htm>
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+	/* @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap'); */
+	:host {
+		display: block;
+		color: white;
+		padding: .5rem;
+		box-sizing: border-box;
+		font-weight: 300;
+		font-size: 1.1rem;
+	}
+
+	* {
+		font-family: Quicksand;
+	}
+
+	h3 {
+		color: #ccf;
+		margin-bottom: 0;
+		font-weight: 300;
+	}
+
+	a {
+		text-decoration: none;
+		color: white;
+		display: block;
+		font-weight: 300;
+	}
+
+	a:hover {
+		color: #ccf;
+	}
+
+	input {
+		background: #444;
+		color: #ddf;
+		border: none;
+		outline: none;
+		font-size: 1.2rem;
+		width: 100%;
+	}
+</style>
+
+<script>
+	import './lo-go.tag.js';
+	import data from '../data.js';
+
+	class {
+		$onReady() {
+			for (let base in data.sources) {
+				for(let item in data.sources[base]){
+					console.log('base',this.$q1('#'+base))
+					this.$q1('#'+base).innerHTML += `<a href='#${base}/${item}'>${data.sources[base][item]}</a>`
+				}
+				// console.log('base', base)
+			}
+		}
+		search(node){
+			console.log('search',node)
+			this.$event('search',{terms:node.value})
+		}
+	}
+</script>

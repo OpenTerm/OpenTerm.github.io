@@ -1,0 +1,53 @@
+<htm>
+	<navi-gation></navi-gation>
+	<main>
+		<table-view></table-view>
+	</main>
+</htm>
+
+<style>
+	htm {
+		display: flex;
+		flex-direction: row;
+		height: 100%;
+	}
+
+	navi-gation {
+		background: #333;
+		width: 15rem;
+		height: 100%;
+	}
+
+	main {
+		background: #222;
+		width: 100%
+	}
+</style>
+
+<script>
+	import './navi-gation.tag.js'
+	import './table-view.tag.js';
+	import data from '../data.js';
+
+	class {
+		$onReady() {
+			// document.querySelector('#data>div').innerHTML = data.html({ headRow: true });
+			// document.querySelector('footer>a').setAttribute('href', editLink(request[0], request[1]))
+
+			// document.querySelector('#data>div').innerHTML = await fetch('intro.html').then(x => x.text())
+			this.addEventListener('search',event=>this.search(event.detail.terms))
+			window.addEventListener('hashchange', () => this.route())
+			this.route()
+		}
+		async route() {
+			console.log('set route')
+			await customElements.whenDefined('table-view')
+			this.$q1('table-view').setAttribute('path', document.location.hash.substr(1))
+		}
+		async search(terms){
+			let result = data.search(terms);
+			console.log('search result',result);
+			this.$q1('table-view').table = result.html();
+		}
+	}
+</script>

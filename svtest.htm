@@ -1,0 +1,11 @@
+<script type='module'>
+    import { TSV } from './sv.js';
+    let tsv = TSV().parse(`OpenTerm20	en	de
+ven	venous blood	venöses Blut
+art	arterial blood	arterielles Blut
+cap	capillary blood	kapilläres Blut
+liq	cerebrospinal fluid	Liquor
+uri	urine	Urin
+`);
+console.log(tsv);
+</script>

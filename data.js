@@ -1,0 +1,74 @@
+import Table from './table.js';
+// td = x => `<td>${x}</td>`;
+// tr = x => `<tr>${x.map(td).join('\n')}</tr>`;
+// table = x => `<table >${x.map(tr).join('\n')}</table>`;
+// const raw = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/${folder}/master/${file}.tsv`
+// export default new DATA();
+
+export default new class  {
+	openTermVersion = '20';
+	sourceLink = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/codes/${this.openTermVersion}/${folder}/${file}.tsv`
+	editLink = (folder, file) => `https://github.com/OpenTerm/codes/blob/${this.openTermVersion}/${folder}/${file}.tsv`
+
+	sources = {
+		infectio: {
+			vir: "Viruses",
+			bac: "Bacteria",
+			fung: "Fungi",
+			pasi: "Parasites",
+			requests: "Requests",
+			methods: "Methods",
+		},
+		lab:{
+			// requests: "Requests",
+			sources: "Sources",
+			tests: "Tests",
+		}
+
+	}
+	json = {}
+
+	async load(base, item) {
+		console.log('load', base, item)
+		// path = path.split('/')
+		let result = await fetch(this.sourceLink(base, item)).then(x => x.text());
+		// console.log('result', result);
+		let data =  new Table().addRows(result);
+		// console.log(1,data.string)
+		data.keepColumns(['OpenTerm', 'la', 'en', 'de'])
+		// console.log(2,data.string)
+		data.removeEmptyRows();
+		// console.log(3,data.string)
+		if (!this.json[base]) this.json[base] = {}
+		this.json[base][item] = data;
+	}
+
+	table(base,item){
+		return this.json[base]?.[item]?.html();
+	}
+
+	async loadAll() {
+		let all = [];
+		for (let base in this.sources) {
+			for (let item in this.sources[base]) {
+				all.push(this.load(base, item))
+			}
+		}
+		return Promise.all(all);
+	}
+
+	search(terms) {
+		console.log('search',terms)
+		terms = terms.toLowerCase().split(' ');
+		let result = new Table();
+		for(let base in this.json){
+			for(let item in this.json[base]){
+				let table = this.json[base][item].clone();
+				table.searchFilter(terms)
+				console.log(base,item,table.data)
+				result.addRows(table.text())
+			}
+		}
+		return result;
+	}
+}

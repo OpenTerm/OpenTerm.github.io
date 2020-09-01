@@ -1,0 +1,77 @@
+<htm>
+	.
+</htm>
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+
+	* {
+		color: white;
+		font-family: Quicksand;
+	}
+
+	table {
+		margin: 1rem;
+		border-collapse: collapse;
+	}
+
+	tr:nth-child(even) {
+		background: #333
+	}
+
+	tr:hover {
+		background: #555;
+		cursor: pointer;
+	}
+
+	td {
+		vertical-align: top;
+		padding: .5rem;
+	}
+
+	tr:first-child>td {
+		color: #ccf;
+	}
+
+	td:first-child {
+		font-family: Inconsolata;
+		font-weight: 300;
+		color: #ccf;
+	}
+
+	td:not(:first-child) {
+		border-left: 1px solid #444;
+	}
+
+
+
+	table {
+		outline: none;
+	}
+</style>
+
+<script>
+	import data from '../data.js';
+	class {
+		async $onReady() {
+			console.log('load all')
+			await data.loadAll();
+			console.log('data', data);
+			data.search('mum');
+
+		}
+		$onFrameChange() {
+			// console.log('frame',this)
+			// let a = this.getAttribute('path');
+			// console.log('pa',a)
+			// console.log(this.$a)
+			let path = this.$a.path?.split('/');
+			if (!path) return;
+			this.table = data.table(path[0], path[1])
+		}
+		set table(html) {
+			this.$q1('htm').innerHTML = html;
+		}
+	}
+</script>

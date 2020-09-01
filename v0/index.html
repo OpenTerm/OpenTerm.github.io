@@ -1,0 +1,178 @@
+<meta charset="UTF-8">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap');
+
+    * {
+        font-family: Quicksand;
+        color: white
+    }
+
+    h3 {
+        color: #ccf;
+        margin-bottom: 0;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+        display: block
+    }
+    a:hover{
+        color: #ccf;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    tr:nth-child(even) {
+        background: #333
+    }
+
+    header>* {
+        display: inline-block;
+        vertical-align: middle;
+        ;
+    }
+
+    #nav {
+        background: #333;
+        width: 200px
+    }
+
+    #data {
+        background: #222;
+    }
+
+    #data>div {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    #layout {
+        width: 100%;
+        height: 100%;
+    }
+
+
+    tr:hover{
+        background: #555;
+    }
+    td {
+        vertical-align: top;
+        padding: .5rem;
+    }
+
+    tr:first-child>td {
+        color: #ccf;
+    }
+
+    td:first-child {
+        font-family: Inconsolata;
+        font-weight: bold;
+        color: #ccf;
+    }
+
+    td:not(:first-child) {
+        border-left: 1px solid #444;
+    }
+
+
+
+    table {
+        outline: none;
+    }
+
+    input {
+        background: #444;
+        color: #ddf;
+        border: none;
+        outline: none;
+        font-size: 1.2rem;
+    }
+
+    header {
+        cursor: pointer;
+    }
+    footer{position: absolute; bottom:5px; font-size: 1.4rem}
+</style>
+
+
+<table id='layout'>
+    <tr>
+        <td id='nav'>
+            <header onclick='document.location.hash=""'>
+                <img src='logo.svg' style='width:80px;' />
+                <h1>
+                    <div style='color: hsla(254, 50%, 50%, 90%);'>Open</div>
+                    <div style='color: hsla(254, 50%, 70%, 90%);'>Term</div>
+                </h1>
+            </header>
+
+            <input type='text' id='search' placeholder='search...' />
+
+            <h3>Infectiology</h3>
+            <a href='#infectio/vir'>Viruses</a>
+            <a href='#infectio/bac'>Bacteria</a>
+            <a href='#infectio/fung'>Fungi</a>
+            <a href='#infectio/pasi'>Parasites</a>
+            <a href='#infectio/requests'>Requests</a>
+            <a href='#infectio/methods'>Methods</a>
+
+            <h3>Clinical Chemistry</h3>
+            <a href='#lab/requests'>Requests</a>
+            <a href='#lab/sources'>Sources</a>
+            <a href='#lab/tests'>Tests</a>
+
+            <h3>Anatomy</h3>
+            <a href='#anatomy/bones'>Bones</a>
+            <a href='#anatomy/directions'>directions</a>
+            <a href='#anatomy/organs'>organs</a>
+
+            <footer>
+                <a href='https://github.com/OpenTerm' target='blank'>edit on GitHub</a>
+            </footer>
+        </td>
+        <td id='data'>
+            <div></div>
+        </td>
+    </tr>
+</table>
+
+
+<script type='module'>
+    import { TSV } from './sv.js';
+    // td = x => `<td>${x}</td>`;
+    // tr = x => `<tr>${x.map(td).join('\n')}</tr>`;
+    // table = x => `<table >${x.map(tr).join('\n')}</table>`;
+    // const raw = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/${folder}/master/${file}.tsv`
+    const version = '20';
+    const raw = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/codes/${version}/${folder}/${file}.tsv`
+    const editLink = (folder,file) => `https://github.com/OpenTerm/codes/blob/${version}/${folder}/${file}.tsv`
+    async function load() {
+        let request = document.location.hash.substr(1).split('/');
+        if (request.length > 1) {
+            let result = await fetch(raw(request[0], request[1])).then(x => x.text());
+            console.log('result', result);
+            let data = TSV(result);
+            console.log(1,data.string)
+            data.filterColumns(['OpenTerm', 'la','en', 'de'])
+            console.log(2,data.string)
+            data.removeEmptyRows();
+            console.log(3,data.string)
+            document.querySelector('#data>div').innerHTML = data.html({ headRow: true });
+            document.querySelector('footer>a').setAttribute('href',editLink(request[0], request[1]))
+        } else {
+            document.querySelector('#data>div').innerHTML = await fetch('intro.html').then(x=>x.text())
+        }
+
+    }
+    window.addEventListener('hashchange', load)
+    load()
+</script>

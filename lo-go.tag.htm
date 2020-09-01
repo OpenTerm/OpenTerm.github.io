@@ -1,0 +1,59 @@
+<htm>
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+		<g id='T' stroke-width='30' stroke-linecap="round">
+			<line x1='62' x2='450' y1='164' y2='164' />
+			<line x1='256' x2='256' y1='164' y2='470' />
+		</g>
+		<g id='O' stroke-width='30' fill='transparent'>
+			<circle cx='256' cy='256' r='240' />
+			<!-- <circle cx='256' cy='164' r='1' /> -->
+		</g>
+	</svg>
+
+	<h1>
+		<div id='open'>Open</div>
+		<div id='term'>Term</div>
+	</h1>
+</htm>
+
+<style>
+	:host {
+		--color1: hsla(254, 50%, 50%, 90%);
+		--color2: hsla(254, 50%, 70%, 90%);
+	}
+
+	* {
+		font-weight: 300;
+	}
+
+	svg {
+		width: 80px;
+	}
+
+	htm>* {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	#O {
+		stroke: var(--color1);
+	}
+
+	#open {
+		color: var(--color1)
+	}
+
+	#T {
+		stroke: var(--color2);
+	}
+
+	#term {
+		color: var(--color2)
+	}
+</style>
+
+<script>
+	class {
+
+	}
+</script>
