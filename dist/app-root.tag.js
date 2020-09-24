@@ -20,6 +20,8 @@ STYLE.appendChild(document.createTextNode(`htm {
 		display: flex;
 		flex-direction: row;
 		height: 100%;
+		width: 100%;
+		overflow: hidden;
 	}
 
 	navi-gation {
@@ -30,7 +32,22 @@ STYLE.appendChild(document.createTextNode(`htm {
 
 	main {
 		background: #222;
-		width: 100%
+		width: 100%;
+		overflow: auto;
+		scrollbar-color: #444 #333;
+		scrollbar-width: thin;
+	}
+
+	::-webkit-scrollbar {
+		width: .7rem;
+	}
+
+	::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 6px #333;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background-color: #444;
 	}`));
 //] CSS
 
