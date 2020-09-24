@@ -17,6 +17,7 @@ export default new class {
 			fung: "Fungi",
 			pasi: "Parasites",
 			requests: "Requests",
+			request_playfile: "Request Brainstorming",
 			methods: "Methods",
 			material: "Materials",
 			specimen: "Specimen"
