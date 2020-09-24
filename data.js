@@ -5,7 +5,7 @@ import Table from './table.js';
 // const raw = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/${folder}/master/${file}.tsv`
 // export default new DATA();
 
-export default new class  {
+export default new class {
 	openTermVersion = '20';
 	sourceLink = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/codes/${this.openTermVersion}/${folder}/${file}.tsv`
 	editLink = (folder, file) => `https://github.com/OpenTerm/codes/blob/${this.openTermVersion}/${folder}/${file}.tsv`
@@ -18,12 +18,20 @@ export default new class  {
 			pasi: "Parasites",
 			requests: "Requests",
 			methods: "Methods",
+			material: "Materials",
+			specimen: "Specimen"
 		},
-		lab:{
+		lab: {
 			// requests: "Requests",
 			sources: "Sources",
 			tests: "Tests",
-		}
+		},
+		anatomy: {
+			// requests: "Requests",
+			bones: "Bones",
+			directions: "Directions",
+			organs: "Organs",
+		},
 
 	}
 	json = {}
@@ -33,7 +41,7 @@ export default new class  {
 		// path = path.split('/')
 		let result = await fetch(this.sourceLink(base, item)).then(x => x.text());
 		// console.log('result', result);
-		let data =  new Table().addRows(result);
+		let data = new Table().addRows(result);
 		// console.log(1,data.string)
 		data.keepColumns(['OpenTerm', 'la', 'en', 'de'])
 		// console.log(2,data.string)
@@ -43,7 +51,7 @@ export default new class  {
 		this.json[base][item] = data;
 	}
 
-	table(base,item){
+	table(base, item) {
 		return this.json[base]?.[item]?.html();
 	}
 
@@ -51,24 +59,41 @@ export default new class  {
 		let all = [];
 		for (let base in this.sources) {
 			for (let item in this.sources[base]) {
-				all.push(this.load(base, item))
+				this.load(base, item).then(async x => {
+					console.log('loaded', base, item)
+					// console.log('find link',`[href='#${base}/${item}']`)
+					// document.querySelector(`a[href='#${base}/${item}']`)?.classList?.remove('loading')
+					await customElements.whenDefined('navi-gation');
+					// this.$event('loaded', { base, item })
+					window.dispatchEvent(new CustomEvent('loaded', {
+						detail: {base,item}
+					}));
+					// console.log('navi',document.querySelector('navi-gation'))
+					// document.querySelector('navi-gation').activate(base, item);
+					// if (document.location.hash.substr(1) == base + '/' + item) {
+					// 	console.log("MATCHHHH");
+					// 	await customElements.whenDefined('table-view');
+					// 	document.querySelector('table-view')?.reload();
+					// }
+				})
 			}
 		}
-		return Promise.all(all);
+		// return Promise.all(all);
 	}
 
 	search(terms) {
-		console.log('search',terms)
+		console.log('search', terms)
 		terms = terms.toLowerCase().split(' ');
 		let result = new Table();
-		for(let base in this.json){
-			for(let item in this.json[base]){
+		for (let base in this.json) {
+			for (let item in this.json[base]) {
 				let table = this.json[base][item].clone();
 				table.searchFilter(terms)
-				console.log(base,item,table.data)
+				console.log(base, item, table.data)
 				result.addRows(table.text())
 			}
 		}
+		result.removeEmptyRows();
 		return result;
 	}
 }

@@ -5,7 +5,7 @@ console.log('navi-gation', import.meta.url);
 const HTML = document.createElement('template');
 HTML.innerHTML = `<lo-go></lo-go>
 
-	<input type='text' id='search' placeholder='search...' on-input='search'/>
+	<input type='text' id='search' placeholder='search...' on-input='search' />
 
 	<h3>Infectiology</h3>
 	<div id='infectio'></div>
@@ -16,9 +16,10 @@ HTML.innerHTML = `<lo-go></lo-go>
 
 
 	<h3>Anatomy</h3>
-	<a href='#anatomy/bones'>Bones</a>
+	<div id='anatomy'></div>
+	<!-- <a href='#anatomy/bones'>Bones</a>
 	<a href='#anatomy/directions'>directions</a>
-	<a href='#anatomy/organs'>organs</a>
+	<a href='#anatomy/organs'>organs</a> -->
 
 	<footer>
 		<a href='https://github.com/OpenTerm' target='blank'>edit on GitHub</a>
@@ -33,6 +34,7 @@ HTML.innerHTML = `<lo-go></lo-go>
 //[ CSS
 let STYLE = document.createElement('style');
 STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+
 	/* @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap'); */
 	:host {
 		display: block;
@@ -71,6 +73,14 @@ STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis
 		outline: none;
 		font-size: 1.2rem;
 		width: 100%;
+	}
+
+	.loading {
+		color: gray;
+	}
+	footer{
+		position: absolute;
+		bottom:.5rem;
 	}`));
 //] CSS
 
@@ -93,7 +103,7 @@ class WebTag extends HTMLElement {
 		this.shadowRoot.appendChild(this.$HTM)
 		this.$viewUpdateCount = 0;
 
-
+		this.$onLoad(); //: onLoad
 	}
 
 
@@ -235,18 +245,36 @@ class WebTag extends HTMLElement {
 	//--------------------------------------------
 
 	
+		$onLoad(){
+
+		}
 		$onReady() {
 			for (let base in data.sources) {
-				for(let item in data.sources[base]){
-					console.log('base',this.$q1('#'+base))
-					this.$q1('#'+base).innerHTML += `<a href='#${base}/${item}'>${data.sources[base][item]}</a>`
+				for (let item in data.sources[base]) {
+					console.log('show', base,item,this.$q1('#' + base))
+					this.$q1('#' + base).innerHTML += `<a class='loading' href='#${base}/${item}'>${data.sources[base][item]}</a>`
 				}
 				// console.log('base', base)
 			}
+			window.addEventListener('loaded',e=>{
+				// console.log('e',e);
+				this.activate(e.detail.base, e.detail.item)
+			})
+			window.addEventListener('hashchange',e=>{
+				this.updateEditLink();
+			})
 		}
-		search(node){
-			console.log('search',node)
-			this.$event('search',{terms:node.value})
+		updateEditLink(){
+			let path = document.location.hash.substr(1).split('/')
+			this.$q1('footer a').setAttribute('href',data.editLink(path[0],path[1]))
+		}
+		activate(base,item){
+			console.log('activate',base,item,`a[href='#${base}/${item}']`);
+			this.$q1(`a[href='#${base}/${item}']`)?.classList?.remove('loading')
+		}
+		search(node) {
+			console.log('search', node)
+			this.$event('search', { terms: node.value })
 		}
 
 };

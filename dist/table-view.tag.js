@@ -234,6 +234,13 @@ class WebTag extends HTMLElement {
 			await data.loadAll();
 			console.log('data', data);
 			data.search('mum');
+			window.addEventListener('loaded', e => {
+				if (document.location.hash.substr(1) == e.detail.base + '/' + e.detail.item) {
+					console.log("MATCHHHH");
+					// await customElements.whenDefined('table-view');
+					this.reload();
+				}
+			})
 
 		}
 		$onFrameChange() {
@@ -241,8 +248,12 @@ class WebTag extends HTMLElement {
 			// let a = this.getAttribute('path');
 			// console.log('pa',a)
 			// console.log(this.$a)
+			this.reload();
+		}
+		reload() {
 			let path = this.$a.path?.split('/');
 			if (!path) return;
+			console.log("RELOAD", path)
 			this.table = data.table(path[0], path[1])
 		}
 		set table(html) {
