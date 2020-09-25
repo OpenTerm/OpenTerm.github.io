@@ -44,7 +44,7 @@ export default new class {
 		// console.log('result', result);
 		let data = new Table().addRows(result);
 		// console.log(1,data.string)
-		data.keepColumns(['OpenTerm', 'la', 'en', 'de'])
+		data.keepColumns(['OpenTerm', 'la', 'en', 'de','explanation'])
 		// console.log(2,data.string)
 		data.removeEmptyRows();
 		// console.log(3,data.string)
