@@ -1,20 +1,33 @@
 console.log('app-root', import.meta.url);
-
-
-//[ HTML
+export default class XML {
+    static parse(string, type = 'text/xml') { // like JSON.parse
+        return new DOMParser().parseFromString(string.replace(/xmlns=".*?"/g, ''), type)
+    }
+    static stringify(DOM) { // like JSON.stringify
+        return new XMLSerializer().serializeToString(DOM).replace(/xmlns=".*?"/g, '')
+    }
+     static async fetch(url) {
+        return XML.parse(await fetch(url).then(x => x.text()))
+    }
+    static tag(tagName, attributes){
+        let tag = XML.parse(`<${tagName}/>`);
+        for(let key in attributes) tag.firstChild.setAttribute(key,attributes[key]);
+        return tag.firstChild;
+    }
+    static transform(xml, xsl, stringOutput = true) {
+        let processor = new XSLTProcessor();
+        processor.importStylesheet(typeof xsl == 'string' ? XML.parse(xsl) : xsl);
+        let output = processor.transformToDocument(typeof xml == 'string' ? XML.parse(xml) : xml);
+        return stringOutput ? XML.stringify(output) : output;
+    }
+}
+XMLDocument.prototype.stringify = XML.stringify
+Element.prototype.stringify = XML.stringify
 const HTML = document.createElement('template');
 HTML.innerHTML = `<navi-gation></navi-gation>
 	<main>
 		<table-view></table-view>
 	</main>`;
-// console.log("HTML", HTML);
-//] HTML
-
-
-
-
-
-//[ CSS
 let STYLE = document.createElement('style');
 STYLE.appendChild(document.createTextNode(`htm {
 		display: flex;
@@ -23,13 +36,11 @@ STYLE.appendChild(document.createTextNode(`htm {
 		width: 100%;
 		overflow: hidden;
 	}
-
 	navi-gation {
 		background: #333;
 		width: 15rem;
 		height: 100%;
 	}
-
 	main {
 		background: #222;
 		width: 100%;
@@ -37,177 +48,68 @@ STYLE.appendChild(document.createTextNode(`htm {
 		scrollbar-color: #444 #333;
 		scrollbar-width: thin;
 	}
-
 	::-webkit-scrollbar {
 		width: .7rem;
 	}
-
 	::-webkit-scrollbar-track {
 		box-shadow: inset 0 0 6px #333;
 	}
-
 	::-webkit-scrollbar-thumb {
 		background-color: #444;
 	}`));
-//] CSS
-
-
-
-
-
-import './navi-gation.tag.js'
-	import './table-view.tag.js';
-	import data from '../data.js';
-
-
 class WebTag extends HTMLElement {
-
 	constructor() {
 		super();
-		// console.log('constructor', this.innerHTML);
 		this.attachShadow({ mode: 'open', delegatesFocus: true });
 		this.shadowRoot.appendChild(STYLE.cloneNode(true)); //: CSS
 		this.$HTM = document.createElement('htm')
 		this.shadowRoot.appendChild(this.$HTM)
-		this.$viewUpdateCount = 0;
-
-
 	}
-
-
 	async connectedCallback() {
-
 		this.$applyHTML(); //: HTML
-
 		this.$attachMutationObservers();
 		this.$attachEventListeners();
-
-
-
-
 		this.$onReady(); //: onReady
 	}
-
-
 	$attachMutationObservers() {
-		//[XSLT
 		this.modelObserver = new MutationObserver(events => {
-			// console.log('model change', events, events[0].type, events[0].target, events[0].target == this)
 			if ((events[0].type == 'attributes') && (events[0].target == this)) {
-				
 			} else {
-
-
 			}
-
 		}).observe(this, { attributes: true, characterData: true, attributeOldValue: true, childList: true, subtree: true });
-		//] XSLT
-
-		
-
 	}
-	// window.addEventListener('load', () => this.applyXSLT());
-
-	//[x  on-tap  on-key  $onSlotChange
 	$attachEventListeners() {
 		let action = (event, key) => {
 			try {
 				let target = event.composedPath()[0];
-				// let target = event.target;
 				let action = target.closest(`[${key}]`);
-				// console.log('EEE', key, event.composedPath(), target, action, 'called by', this, event)
-				// console.log('PATH', event.composedPath().map(x => this.$1(x)))
 				this[action.getAttribute(key)](action, event, target)
 			}
-			catch  { }
+			catch { }
 		}
-
-
-
-
-
-
-
-
 	}
-	//]  on-tap  on-key  $onSlotChange
-
-
-	//[ HTML
 	$applyHTML() {
-		// this.shadowRoot.innerHTML = `<style>${STYLE.textContent}</style>` + new XMLSerializer().serializeToString(HTML);
 		this.$view = HTML.content.cloneNode(true)
-		// 	this.$clearView();
-		// this.shadowRoot.appendChild(STYLE.cloneNode(true));
-		// this.shadowRoot.appendChild(HTML.content.cloneNode(true));
-		// this.shadowRoot.insertAdjacentElement('afterbegin',STYLE);
 	}
-	//] HTML
-
-
-
-	// $clearView() {
-	// 	this.$clear(this.shadowRoot);
-	// }
 	$clear(R) {
-		// https://jsperf.com/innerhtml-vs-removechild/15  >> 3 times faster
 		while (R.lastChild)
 			R.removeChild(R.lastChild);
 	}
-
-
-	// set $style(HTML) {
-	// 	this.shadowRoot.innerHTML = HTML;
-	// }
 	get $view() {
 		return this.$HTM;
-		// return this.shadowRoot.lastChild;
 	}
 	set $view(HTML) {
 		this.$clear(this.$view);
+		if (typeof HTML == 'string')
+			HTML = new DOMParser().parseFromString(HTML, 'text/html').firstChild
 		this.$view.appendChild(HTML);
 	}
-
-	
-
-
-	// 	let treeWalker = document.createTreeWalker(temp1, NodeFilter.SHOW_ELEMENT);
-	// let node = null;
-	// let list = [];
-	// while (node = treeWalker.nextNode()) {
-	// 	list.push(currentNode)
-	// }
-
-
-
-
-
-
-
-
-	$q1(q) { return this.shadowRoot.querySelector(q) } //: viewQS1
-
-
-
-	
-
-
-	
-
-
-
-	
-
-
-	//--------------------------------------------
-	//--------------------------------------------
-
-	
+};
+import './navi-gation.tag.js'
+	import './table-view.tag.js';
+	import data from '../data.js';
+	class app_root extends WebTag {
 		$onReady() {
-			// document.querySelector('#data>div').innerHTML = data.html({ headRow: true });
-			// document.querySelector('footer>a').setAttribute('href', editLink(request[0], request[1]))
-
-			// document.querySelector('#data>div').innerHTML = await fetch('intro.html').then(x => x.text())
 			this.addEventListener('search',event=>this.search(event.detail.terms))
 			window.addEventListener('hashchange', () => this.route())
 			this.route()
@@ -222,9 +124,5 @@ class WebTag extends HTMLElement {
 			console.log('search result',result);
 			this.$q1('table-view').table = result.html();
 		}
-
-};
-// console.log(WebTag)
-window.customElements.define('app-root', WebTag)
-
-
+	}
+window.customElements.define('app-root', app_root)

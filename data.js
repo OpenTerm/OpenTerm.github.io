@@ -11,21 +11,24 @@ export default new class {
 	editLink = (folder, file) => `https://github.com/OpenTerm/codes/blob/${this.openTermVersion}/${folder}/${file}.tsv`
 
 	sources = {
-		infectio: {
+		germs:{
 			vir: "Viruses",
 			bac: "Bacteria",
 			fung: "Fungi",
 			pasi: "Parasites",
-			requests: "Requests",
-			request_playfile: "Request Brainstorming",
-			methods: "Methods",
-			material: "Materials",
-			specimen: "Specimen"
 		},
+
 		lab: {
 			// requests: "Requests",
 			sources: "Sources",
 			tests: "Tests",
+			requests: "Requests",
+			request_playfile: "Request Brainstorming",
+			methods: "Methods",
+			material: "Analytes",
+			results: "Results",
+			packaging: "Packaging",
+			specimen: "Specimen",
 		},
 		anatomy: {
 			// requests: "Requests",
