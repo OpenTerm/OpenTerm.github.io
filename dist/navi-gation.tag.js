@@ -32,6 +32,8 @@ HTML.innerHTML = `<lo-go></lo-go>
 	<div id='lab'></div>
 	<h3>Anatomy</h3>
 	<div id='anatomy'></div>
+	<h3>Test</h3>
+	<div id='test'></div>
 	<!-- <a href='#anatomy/bones'>Bones</a>
 	<a href='#anatomy/directions'>directions</a>
 	<a href='#anatomy/organs'>organs</a> -->
@@ -81,6 +83,13 @@ STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis
 		position: absolute;
 		bottom:.5rem;
 	}`));
+function QQ(query, i) {
+	let result = Array.from(this.querySelectorAll(query));
+	return i ? result?.[i - 1] : result;
+}
+Element.prototype.Q = QQ
+ShadowRoot.prototype.Q = QQ
+DocumentFragment.prototype.Q = QQ
 class WebTag extends HTMLElement {
 	constructor() {
 		super();
@@ -148,8 +157,8 @@ import './lo-go.tag.js';
 		$onReady() {
 			for (let base in data.sources) {
 				for (let item in data.sources[base]) {
-					console.log('show', base,item,this.$q1('#' + base))
-					this.$q1('#' + base).innerHTML += `<a class='loading' href='#${base}/${item}'>${data.sources[base][item]}</a>`
+					console.log('show', base,item,this.$view.Q('#' + base))
+					this.$view.Q('#' + base,1).innerHTML += `<a class='loading' href='#${base}/${item}'>${data.sources[base][item]}</a>`
 				}
 			}
 			window.addEventListener('loaded',e=>{
@@ -161,11 +170,11 @@ import './lo-go.tag.js';
 		}
 		updateEditLink(){
 			let path = document.location.hash.substr(1).split('/')
-			this.$q1('footer a').setAttribute('href',data.editLink(path[0],path[1]))
+			this.$view.Q('footer a',1).setAttribute('href',data.editLink(path[0],path[1]))
 		}
 		activate(base,item){
 			console.log('activate',base,item,`a[href='#${base}/${item}']`);
-			this.$q1(`a[href='#${base}/${item}']`)?.classList?.remove('loading')
+			this.$view.Q(`a[href='#${base}/${item}']`,1)?.classList?.remove('loading')
 		}
 		search(node) {
 			console.log('search', node)

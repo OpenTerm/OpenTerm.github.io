@@ -23,12 +23,11 @@ export default new class {
 			sources: "Sources",
 			tests: "Tests",
 			requests: "Requests",
-			request_playfile: "Request Brainstorming",
 			methods: "Methods",
-			material: "Analytes",
+			analytes: "Analytes",
 			results: "Results",
 			packaging: "Packaging",
-			specimen: "Specimen",
+			// specimen: "Specimen",
 		},
 		anatomy: {
 			// requests: "Requests",
@@ -36,6 +35,10 @@ export default new class {
 			directions: "Directions",
 			organs: "Organs",
 		},
+		test:{
+			request_playfile: "Request Brainstorming",
+
+		}
 
 	}
 	json = {}

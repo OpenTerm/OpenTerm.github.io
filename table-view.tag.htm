@@ -72,17 +72,17 @@
 			// console.log('frame',this)
 			// let a = this.getAttribute('path');
 			// console.log('pa',a)
-			// console.log(this.$a)
+			// console.log(this.$frame)
 			this.reload();
 		}
 		reload() {
-			let path = this.$a.path?.split('/');
+			let path = this.$frame.path?.split('/');
 			if (!path) return;
 			console.log("RELOAD", path)
 			this.table = data.table(path[0], path[1])
 		}
 		set table(html) {
-			this.$q1('htm').innerHTML = html;
+			this.$view = html;
 		}
 	}
 </script>

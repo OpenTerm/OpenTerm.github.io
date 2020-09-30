@@ -59,12 +59,12 @@
 		async route() {
 			console.log('set route')
 			await customElements.whenDefined('table-view')
-			this.$q1('table-view').setAttribute('path', document.location.hash.substr(1))
+			this.$view.Q('table-view',1).setAttribute('path', document.location.hash.substr(1))
 		}
 		async search(terms){
 			let result = data.search(terms);
 			console.log('search result',result);
-			this.$q1('table-view').table = result.html();
+			this.$view.Q('table-view',1).table = result.html();
 		}
 	}
 </script>

@@ -57,6 +57,13 @@ STYLE.appendChild(document.createTextNode(`htm {
 	::-webkit-scrollbar-thumb {
 		background-color: #444;
 	}`));
+function QQ(query, i) {
+	let result = Array.from(this.querySelectorAll(query));
+	return i ? result?.[i - 1] : result;
+}
+Element.prototype.Q = QQ
+ShadowRoot.prototype.Q = QQ
+DocumentFragment.prototype.Q = QQ
 class WebTag extends HTMLElement {
 	constructor() {
 		super();
@@ -117,12 +124,12 @@ import './navi-gation.tag.js'
 		async route() {
 			console.log('set route')
 			await customElements.whenDefined('table-view')
-			this.$q1('table-view').setAttribute('path', document.location.hash.substr(1))
+			this.$view.Q('table-view',1).setAttribute('path', document.location.hash.substr(1))
 		}
 		async search(terms){
 			let result = data.search(terms);
 			console.log('search result',result);
-			this.$q1('table-view').table = result.html();
+			this.$view.Q('table-view',1).table = result.html();
 		}
 	}
 window.customElements.define('app-root', app_root)

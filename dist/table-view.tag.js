@@ -113,6 +113,17 @@ class WebTag extends HTMLElement {
 			HTML = new DOMParser().parseFromString(HTML, 'text/html').firstChild
 		this.$view.appendChild(HTML);
 	}
+	get $frame() {  // attributes
+		return new Proxy(
+			Object.fromEntries(Array.from(this.attributes).map(x => [x.nodeName, x.nodeValue])),
+			{
+				set: (target, key, value) => {
+					this.setAttribute(key, value);
+					return Reflect.set(target, key, value);
+				}
+			}
+		)
+	}
 };
 import data from '../data.js';
 	class table_view extends WebTag {
@@ -132,13 +143,13 @@ import data from '../data.js';
 			this.reload();
 		}
 		reload() {
-			let path = this.$a.path?.split('/');
+			let path = this.$frame.path?.split('/');
 			if (!path) return;
 			console.log("RELOAD", path)
 			this.table = data.table(path[0], path[1])
 		}
 		set table(html) {
-			this.$q1('htm').innerHTML = html;
+			this.$view = html;
 		}
 	}
 window.customElements.define('table-view', table_view)

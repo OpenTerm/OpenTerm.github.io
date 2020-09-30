@@ -40,10 +40,10 @@ class WebTag extends HTMLElement {
 
 	async connectedCallback() {
 
-		this.$applyHTML(); //: HTML
+		this.$framepplyHTML(); //: HTML
 
-		this.$attachMutationObservers();
-		this.$attachEventListeners();
+		this.$framettachMutationObservers();
+		this.$framettachEventListeners();
 
 
 
