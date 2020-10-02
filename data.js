@@ -39,7 +39,7 @@ export default new class {
 			request_playfile: "Request Brainstorming",
 
 		},
-		Interpretive_comments:{
+		comments:{
 			assesments: "Assesment",
 			limitations: "Limitation",
 			warnings: "Warning",
