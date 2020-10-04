@@ -38,6 +38,12 @@ export default new class {
 		test:{
 			request_playfile: "Request Brainstorming",
 
+		},
+		comments:{
+			assesments: "Assesment",
+			limitations: "Limitation",
+			warnings: "Warning",
+			
 		}
 
 	}
