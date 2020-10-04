@@ -50,14 +50,16 @@ STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis
 		padding: .5rem;
 	}
 	tr:first-child>td {
+		font-family: "Lucida Console", Monaco, monospace;
+		font-weight: 100;
 		color: #ccf;
 		position: sticky;
 		top: 0;
 		background: #333;
 	}
 	td:first-child {
-		font-family: Inconsolata;
-		font-weight: 300;
+		font-family: "Lucida Console", Monaco, monospace;
+		font-weight: 100;
 		color: #ccf;
 	}
 	td:not(:first-child) {
