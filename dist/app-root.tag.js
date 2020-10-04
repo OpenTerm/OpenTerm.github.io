@@ -38,7 +38,7 @@ STYLE.appendChild(document.createTextNode(`htm {
 	}
 	navi-gation {
 		background: #333;
-		width: 15rem;
+		width: 17rem;
 		height: 100%;
 	}
 	main {

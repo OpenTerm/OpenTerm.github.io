@@ -24,24 +24,27 @@ export default class XML {
 XMLDocument.prototype.stringify = XML.stringify
 Element.prototype.stringify = XML.stringify
 const HTML = document.createElement('template');
-HTML.innerHTML = `<lo-go></lo-go>
-	<input type='text' id='search' placeholder='search...' on-input='search' />
-	<h3>Germs</h3>
-	<div id='germs'></div>
-	<h3>Lab</h3>
-	<div id='lab'></div>
-	<h3>Anatomy</h3>
-	<div id='anatomy'></div>
-	<h3>Interpretive Comments</h3>
-	<div id='comments'></div>
-	<h3>ETL</h3>
-	<div id='etl'></div>
-	<!-- <a href='#anatomy/bones'>Bones</a>
-	<a href='#anatomy/directions'>directions</a>
-	<a href='#anatomy/organs'>organs</a> -->
-	<footer>
-		<a href='https://github.com/OpenTerm' target='blank'>edit on GitHub</a>
-	</footer>`;
+HTML.innerHTML = `<flexbox>
+		<header>
+			<lo-go></lo-go>
+			<input type='text' id='search' placeholder='search...' on-input='search' />
+		</header>
+		<main>
+			<h3>Germs</h3>
+			<div id='germs'></div>
+			<h3>Lab</h3>
+			<div id='lab'></div>
+			<h3>Anatomy</h3>
+			<div id='anatomy'></div>
+			<h3>Interpretive Comments</h3>
+			<div id='comments'></div>
+			<h3>ETL</h3>
+			<div id='etl'></div>
+		</main>
+		<footer>
+			<a href='https://github.com/OpenTerm' target='blank'>edit on GitHub</a>
+		</footer>
+	</flexbox>`;
 let STYLE = document.createElement('style');
 STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
 	/* @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap'); */
@@ -52,6 +55,40 @@ STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis
 		box-sizing: border-box;
 		font-weight: 300;
 		font-size: 1.1rem;
+		height: 100%;
+	}
+	flexbox {
+		display: flex;
+		flex-direction: column;
+	}
+	header {
+		/* position: absolute; */
+		top: 0;
+		height: 170px;
+		padding: .5rem;
+		background: #333;
+	}
+	main {
+		flex: 1 1 auto;
+		height: calc(100vh - 250px);
+		overflow-y: auto;
+		scrollbar-color: #444 #333;
+		scrollbar-width: thin;
+	}
+	footer {
+		/* position: absolute; */
+		bottom: 0;
+		padding: .5rem;
+		background: #333;
+	}
+	::-webkit-scrollbar {
+		width: .7rem;
+	}
+	::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 6px #333;
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: #444;
 	}
 	* {
 		font-family: Quicksand;
@@ -80,10 +117,6 @@ STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis
 	}
 	.loading {
 		color: gray;
-	}
-	footer{
-		position: absolute;
-		bottom:.5rem;
 	}`));
 function QQ(query, i) {
 	let result = Array.from(this.querySelectorAll(query));
@@ -154,29 +187,29 @@ class WebTag extends HTMLElement {
 import './lo-go.tag.js';
 	import data from '../data.js';
 	class navi_gation extends WebTag {
-		$onLoad(){
+		$onLoad() {
 		}
 		$onReady() {
 			for (let base in data.sources) {
 				for (let item in data.sources[base]) {
-					console.log('show', base,item,this.$view.Q('#' + base))
-					this.$view.Q('#' + base,1).innerHTML += `<a class='loading' href='#${base}/${item}'>${data.sources[base][item]}</a>`
+					console.log('show', base, item, this.$view.Q('#' + base))
+					this.$view.Q('#' + base, 1).innerHTML += `<a class='loading' href='#${base}/${item}'>${data.sources[base][item]}</a>`
 				}
 			}
-			window.addEventListener('loaded',e=>{
+			window.addEventListener('loaded', e => {
 				this.activate(e.detail.base, e.detail.item)
 			})
-			window.addEventListener('hashchange',e=>{
+			window.addEventListener('hashchange', e => {
 				this.updateEditLink();
 			})
 		}
-		updateEditLink(){
+		updateEditLink() {
 			let path = document.location.hash.substr(1).split('/')
-			this.$view.Q('footer a',1).setAttribute('href',data.editLink(path[0],path[1]))
+			this.$view.Q('footer a', 1).setAttribute('href', data.editLink(path[0], path[1]))
 		}
-		activate(base,item){
-			console.log('activate',base,item,`a[href='#${base}/${item}']`);
-			this.$view.Q(`a[href='#${base}/${item}']`,1)?.classList?.remove('loading')
+		activate(base, item) {
+			console.log('activate', base, item, `a[href='#${base}/${item}']`);
+			this.$view.Q(`a[href='#${base}/${item}']`, 1)?.classList?.remove('loading')
 		}
 		search(node) {
 			console.log('search', node)
