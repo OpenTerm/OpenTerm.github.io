@@ -35,7 +35,8 @@ export default new class {
 			directions: "Directions",
 			organs: "Organs",
 		},
-		test:{
+		etl:{
+			ukm: "UKM",
 			request_playfile: "Request Brainstorming",
 
 		},
