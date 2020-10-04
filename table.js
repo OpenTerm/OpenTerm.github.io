@@ -88,7 +88,7 @@ export default class Table {
 	html(options = {}) {
 		return `<table>`
 			+ this.data
-				.map(line => line.map(column => `<td>${column}</td>`).join('\t\n'))
+				.map(line => line.map(column => `<td>${column?.replace('\\','\n')}</td>`).join('\t\n'))
 				.map(line => `<tr>${line}</tr>`).join('\n')
 			+ `</table>`;
 	}
