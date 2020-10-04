@@ -36,8 +36,10 @@ STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis
 		margin: 1rem;
 		border-collapse: collapse;
 	}
-	tr:nth-child(even) {
-		background: #333
+	tr:nth-child(odd) {
+		background: #272727;
+	}
+	tr:first-child {
 	}
 	tr:hover {
 		background: #555;
@@ -49,6 +51,9 @@ STYLE.appendChild(document.createTextNode(`@import url('https://fonts.googleapis
 	}
 	tr:first-child>td {
 		color: #ccf;
+		position: sticky;
+		top: 0;
+		background: #333;
 	}
 	td:first-child {
 		font-family: Inconsolata;
