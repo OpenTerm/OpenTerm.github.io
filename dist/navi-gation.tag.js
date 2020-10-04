@@ -35,8 +35,7 @@ HTML.innerHTML = `<lo-go></lo-go>
 	<h3>Interpretive Comments</h3>
 	<div id='comments'></div>
 	<h3>ETL</h3>
-	<div id='test'></div>
-	<div id='ukm'></div>
+	<div id='etl'></div>
 	<!-- <a href='#anatomy/bones'>Bones</a>
 	<a href='#anatomy/directions'>directions</a>
 	<a href='#anatomy/organs'>organs</a> -->
