@@ -1,4 +1,5 @@
 import Table from './table.js';
+import MAPPINGS from './tables.js';
 // td = x => `<td>${x}</td>`;
 // tr = x => `<tr>${x.map(td).join('\n')}</tr>`;
 // table = x => `<table >${x.map(tr).join('\n')}</table>`;
@@ -7,47 +8,10 @@ import Table from './table.js';
 
 export default new class {
 	openTermVersion = '20';
-	sourceLink = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/codes/${this.openTermVersion}/${folder}/${file}.tsv`
-	editLink = (folder, file) => `https://github.com/OpenTerm/codes/blob/${this.openTermVersion}/${folder}/${file}.tsv`
+	sourceLink = (folder, file) => `https://raw.githubusercontent.com/OpenTerm/codes/${this.openTermVersion}/${folder}/${file}`
+	editLink = (folder, file) => `https://github.com/OpenTerm/codes/blob/${this.openTermVersion}/${folder}/${file}`
 
-	sources = {
-		germs:{
-			vir: "Viruses",
-			bac: "Bacteria",
-			fung: "Fungi",
-			pasi: "Parasites",
-		},
 
-		lab: {
-			// requests: "Requests",
-			sources: "Sources",
-			tests: "Tests",
-			requests: "Requests",
-			methods: "Methods",
-			analytes: "Analytes",
-			results: "Results",
-			packaging: "Packaging",
-			// specimen: "Specimen",
-		},
-		anatomy: {
-			// requests: "Requests",
-			bones: "Bones",
-			directions: "Directions",
-			organs: "Organs",
-		},
-		etl:{
-			ukm: "UKM",
-			request_playfile: "Request Brainstorming",
-
-		},
-		comments:{
-			assesments: "Assesment",
-			limitations: "Limitation",
-			warnings: "Warning",
-			
-		}
-
-	}
 	json = {}
 
 	async load(base, item) {
@@ -57,7 +21,7 @@ export default new class {
 		// console.log('result', result);
 		let data = new Table().addRows(result);
 		// console.log(1,data.string)
-		data.keepColumns(['OpenTerm', 'la', 'en', 'de','explanation'])
+		data.keepColumns(['OpenTerm', 'la', 'en', 'de', 'explanation'])
 		// console.log(2,data.string)
 		data.removeEmptyRows();
 		// console.log(3,data.string)
@@ -71,8 +35,8 @@ export default new class {
 
 	async loadAll() {
 		let all = [];
-		for (let base in this.sources) {
-			for (let item in this.sources[base]) {
+		for (let base in MAPPINGS) {
+			for (let item in MAPPINGS[base]) {
 				this.load(base, item).then(async x => {
 					console.log('loaded', base, item)
 					// console.log('find link',`[href='#${base}/${item}']`)
@@ -80,7 +44,7 @@ export default new class {
 					await customElements.whenDefined('navi-gation');
 					// this.$event('loaded', { base, item })
 					window.dispatchEvent(new CustomEvent('loaded', {
-						detail: {base,item}
+						detail: { base, item }
 					}));
 					// console.log('navi',document.querySelector('navi-gation'))
 					// document.querySelector('navi-gation').activate(base, item);
@@ -111,3 +75,46 @@ export default new class {
 		return result;
 	}
 }
+
+
+
+
+
+// sources = {
+// 	germs:{
+// 		vir: "Viruses",
+// 		bac: "Bacteria",
+// 		fung: "Fungi",
+// 		pasi: "Parasites",
+// 	},
+
+// 	lab: {
+// 		// requests: "Requests",
+// 		sources: "Sources",
+// 		tests: "Tests",
+// 		requests: "Requests",
+// 		methods: "Methods",
+// 		analytes: "Analytes",
+// 		results: "Results",
+// 		packaging: "Packaging",
+// 		// specimen: "Specimen",
+// 	},
+// 	anatomy: {
+// 		// requests: "Requests",
+// 		bones: "Bones",
+// 		directions: "Directions",
+// 		organs: "Organs",
+// 	},
+// 	etl:{
+// 		ukm: "UKM",
+// 		request_playfile: "Request Brainstorming",
+
+// 	},
+// 	comments:{
+// 		assesments: "Assesment",
+// 		limitations: "Limitation",
+// 		warnings: "Warning",
+
+// 	}
+
+// }

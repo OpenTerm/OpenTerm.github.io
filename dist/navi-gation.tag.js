@@ -30,16 +30,6 @@ HTML.innerHTML = `<flexbox>
 			<input type='text' id='search' placeholder='search...' on-input='search' />
 		</header>
 		<main>
-			<h3>Germs</h3>
-			<div id='germs'></div>
-			<h3>Lab</h3>
-			<div id='lab'></div>
-			<h3>Anatomy</h3>
-			<div id='anatomy'></div>
-			<h3>Interpretive Comments</h3>
-			<div id='comments'></div>
-			<h3>ETL</h3>
-			<div id='etl'></div>
 		</main>
 		<footer>
 			<a href='https://github.com/OpenTerm' target='blank'>edit on GitHub</a>
@@ -186,15 +176,25 @@ class WebTag extends HTMLElement {
 };
 import './lo-go.tag.js';
 	import data from '../data.js';
+	import MAPPINGS from '../tables.js';
+	String.prototype.toTitleCase = function () {
+		return this.toLowerCase()
+			.replace(/_/g, ' ')
+			.split(' ')
+			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+			.join(' ');
+	}
 	class navi_gation extends WebTag {
 		$onLoad() {
 		}
 		$onReady() {
-			for (let base in data.sources) {
-				for (let item in data.sources[base]) {
-					console.log('show', base, item, this.$view.Q('#' + base))
-					this.$view.Q('#' + base, 1).innerHTML += `<a class='loading' href='#${base}/${item}'>${data.sources[base][item]}</a>`
+			let html = '';
+			for (let base in MAPPINGS) {
+				html += `<h3>${base.toTitleCase()}</h3>`
+				for (let item in MAPPINGS[base]) {
+					html += `<a class='loading' href='#${base}/${item}'>${item.replace('.tsv', '').toTitleCase()}</a>`
 				}
+				this.$view.Q('main',1).innerHTML = html;
 			}
 			window.addEventListener('loaded', e => {
 				this.activate(e.detail.base, e.detail.item)
